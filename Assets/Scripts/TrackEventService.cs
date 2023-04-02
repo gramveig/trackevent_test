@@ -97,7 +97,6 @@ namespace Alex.trackevent_service
         {
             UnityWebRequest webRequest = UnityWebRequest.Post(_serverUrl, jsonString);
             webRequest.SetRequestHeader("Accept", "application/json");
-            webRequest.SetRequestHeader("Access-Control-Allow-Origin", "*");
             yield return webRequest.SendWebRequest();
      
             if (webRequest.result != UnityWebRequest.Result.Success)
