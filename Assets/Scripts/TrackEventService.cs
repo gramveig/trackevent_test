@@ -107,7 +107,7 @@ namespace Alex.trackevent_service
         private void RestoreSavedEvents()
         {
             _isBusy = true;
-            SaveManager.Instance.Load<EventsData>(_savePath, OnEventsLoaded, false);
+            SaveManager.Instance.Load<EventsData>(_savePath, OnEventsLoaded, true);
         }
 
         private void SaveEvents()
@@ -119,7 +119,7 @@ namespace Alex.trackevent_service
 
             _isBusy = true;
             var eventsData = GetEventsData();
-            SaveManager.Instance.Save(eventsData, _savePath, OnEventsSaved, false);
+            SaveManager.Instance.Save(eventsData, _savePath, OnEventsSaved, true);
         }
 
         private void OnEventsLoaded(EventsData eventsData, SaveResult result, string message)
