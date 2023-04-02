@@ -61,12 +61,10 @@ namespace Alex.trackevent_service
             StartCoroutine(Upload(jsonStr));
         }
 
-        IEnumerator Upload(string jsonString)
+        private IEnumerator Upload(string jsonString)
         {
-            WWWForm form = new WWWForm();
-            form.AddField("events", jsonString);
-     
-            UnityWebRequest webRequest = UnityWebRequest.Post(_serverUrl, form);
+            UnityWebRequest webRequest = UnityWebRequest.Post(_serverUrl, jsonString);
+            webRequest.SetRequestHeader("Accept", "application/json");
             webRequest.SetRequestHeader("Access-Control-Allow-Origin", "*");
             yield return webRequest.SendWebRequest();
      
