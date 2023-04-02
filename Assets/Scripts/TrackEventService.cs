@@ -1,4 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
+using Alex.trackevent_service.Data;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -8,6 +11,11 @@ namespace Alex.trackevent_service
     {
         [SerializeField]
         private string _serverUrl;
+
+        [SerializeField]
+        private float _cooldownBeforeSend;
+        
+        private List<EventData> _events = new List<EventData>();
         
         public void TrackEvent(string type, string data)
         {
@@ -17,9 +25,14 @@ namespace Alex.trackevent_service
                 return;
             }
 
-            TextAsset jsonStr = Resources.Load<TextAsset>("json_example");
+            _events.Add(new EventData(type, data));
+            EventsData eventsData = new EventsData
+            {
+                events = _events.ToArray()
+            };
+            string jsonStr = JsonUtility.ToJson(eventsData);
 
-            StartCoroutine(Upload(jsonStr.text));
+            StartCoroutine(Upload(jsonStr));
         }
         
         IEnumerator Upload(string jsonString)
@@ -27,12 +40,13 @@ namespace Alex.trackevent_service
             WWWForm form = new WWWForm();
             form.AddField("events", jsonString);
      
-            UnityWebRequest www = UnityWebRequest.Post(_serverUrl, form);
-            yield return www.SendWebRequest();
+            UnityWebRequest webRequest = UnityWebRequest.Post(_serverUrl, form);
+            webRequest.SetRequestHeader("Access-Control-Allow-Origin", "*");
+            yield return webRequest.SendWebRequest();
      
-            if (www.result != UnityWebRequest.Result.Success)
+            if (webRequest.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Debug.Log(webRequest.error);
             }
             else
             {
