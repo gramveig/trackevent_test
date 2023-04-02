@@ -323,6 +323,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrackEventService
       objectReference: {fileID: 0}
+    - target: {fileID: 8396447338949549179, guid: 21d677fbbf3fe484da8cbff2f7d6d2da, type: 3}
+      propertyPath: _serverUrl
+      value: http://test.i-alex.net/
+      objectReference: {fileID: 0}
     - target: {fileID: 8862982263629780582, guid: 21d677fbbf3fe484da8cbff2f7d6d2da, type: 3}
       propertyPath: m_RootOrder
       value: 1
