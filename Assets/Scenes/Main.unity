@@ -200,6 +200,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &1903111837 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 9095375099104686451, guid: c10ad16f920b43c468980207b72af814, type: 3}
+  m_PrefabInstance: {fileID: 9095375100437225454}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1903111839 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3564494839228107117, guid: c10ad16f920b43c468980207b72af814, type: 3}
@@ -218,6 +223,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4178273741271755050, guid: d0fb25cf2eb3eaf46ad3b2db78a23688, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1903111837}
     - target: {fileID: 4356903175470691485, guid: d0fb25cf2eb3eaf46ad3b2db78a23688, type: 3}
       propertyPath: m_Name
       value: Canvas
