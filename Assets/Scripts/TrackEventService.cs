@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Alex.trackevent_service.Data;
@@ -18,10 +19,19 @@ namespace Alex.trackevent_service
         private List<EventData> _events = new List<EventData>();
         private float _cooldownTimeCounter;
         private bool _isUploading;
+        private bool _isBusy;
+        private string _savePath;
+
+        private void Start()
+        {
+            _savePath = Application.persistentDataPath + "/" + "SavedEvents";
+            Debug.Log("Persistent data path is: " + _savePath);
+            RestoreSavedEvents();
+        }
 
         private void Update()
         {
-            if (_events.Count == 0 || _isUploading)
+            if (_events.Count == 0 || _isUploading || _isBusy)
             {
                 return;
             }
@@ -33,6 +43,11 @@ namespace Alex.trackevent_service
             }
 
             _cooldownTimeCounter += Time.deltaTime;
+        }
+
+        private void OnDestroy()
+        {
+            SaveEvents();
         }
 
         public void TrackEvent(string type, string data)
@@ -49,16 +64,23 @@ namespace Alex.trackevent_service
 
         private void UploadEvents()
         {
-            EventsData eventsData = new EventsData
-            {
-                events = _events.ToArray()
-            };
+            EventsData eventsData = GetEventsData();
             string jsonStr = JsonUtility.ToJson(eventsData);
 
             _isUploading = true;
             _cooldownTimeCounter = 0;
             Debug.Log("Attempting to upload " + _events.Count + " event(s) to the server...");
             StartCoroutine(Upload(jsonStr));
+        }
+
+        private EventsData GetEventsData()
+        {
+            var eventsData = new EventsData
+            {
+                events = _events.ToArray()
+            };
+
+            return eventsData;
         }
 
         private IEnumerator Upload(string jsonString)
@@ -80,6 +102,66 @@ namespace Alex.trackevent_service
             }
 
             _isUploading = false;
+        }
+
+        private void RestoreSavedEvents()
+        {
+            _isBusy = true;
+            SaveManager.Instance.Load<EventsData>(_savePath, OnEventsLoaded, false);
+        }
+
+        private void SaveEvents()
+        {
+            if (_events.Count == 0)
+            {
+                return;
+            }
+
+            _isBusy = true;
+            var eventsData = GetEventsData();
+            SaveManager.Instance.Save(eventsData, _savePath, OnEventsSaved, false);
+        }
+
+        private void OnEventsLoaded(EventsData eventsData, SaveResult result, string message)
+        {
+            _isBusy = false;
+
+            if (result != SaveResult.Success)
+            {
+                Debug.Log($"No saved events retrieved.\nresult: {result}, message: {message}");
+                return;
+            }
+
+            if (eventsData.events.Length == 0)
+            {
+                Debug.Log("Zero events retrieved.");
+                return;
+            }
+
+            _events = new List<EventData>(eventsData.events);
+            Debug.Log("Successfully retrieved " + _events.Count + " event(s) from Save.");
+            SaveManager.Instance.ClearFIle(_savePath);
+        }
+
+        private void OnEventsSaved(SaveResult result, string message)
+        {
+            _isBusy = false;
+            if (result == SaveResult.Error)
+            {
+                //trying to remove event and save again in case event string is too long
+                if (_events.Count > 0)
+                {
+                    _events.RemoveAt(0);
+                    SaveEvents();
+                    return;
+                }
+
+                Debug.LogError($"Error saving events.\nresult: {result}, message: {message}");
+                return;
+            }
+
+            Debug.Log(_events.Count + " event(s) saved successfully for later retrieval.");
+            _events.Clear();
         }
     }
 }
