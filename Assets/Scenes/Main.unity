@@ -145,10 +145,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: TrackEventService
       objectReference: {fileID: 0}
-    - target: {fileID: 8396447338949549179, guid: 21d677fbbf3fe484da8cbff2f7d6d2da, type: 3}
-      propertyPath: _serverUrl
-      value: http://local.test.ru
-      objectReference: {fileID: 0}
     - target: {fileID: 8862982263629780582, guid: 21d677fbbf3fe484da8cbff2f7d6d2da, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -202,7 +198,7 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2144876865538340352, guid: c10ad16f920b43c468980207b72af814, type: 3}
+    - target: {fileID: 3564494839228107117, guid: c10ad16f920b43c468980207b72af814, type: 3}
       propertyPath: _trackEventService
       value: 
       objectReference: {fileID: 829500377}

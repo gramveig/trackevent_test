@@ -1,4 +1,5 @@
 using UnityEngine;
+using EasyButtons;
 
 namespace Alex.trackevent_service
 {
@@ -7,9 +8,21 @@ namespace Alex.trackevent_service
         [SerializeField]
         private TrackEventService _trackEventService;
 
-        private void Start()
+        [SerializeField]
+        private string _type = "levelStart";
+        [SerializeField]
+        private string _data = "level:3";
+
+        [Button]
+        public void TrackEvent()
         {
-            _trackEventService.TrackEvent("test", "123");
+            if (!Application.isPlaying)
+            {
+                Debug.Log("Start application to track events");
+                return;
+            }
+
+           _trackEventService.TrackEvent(_type, _data);
         }
     }
 }

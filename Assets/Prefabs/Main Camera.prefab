@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9095375099104686448}
   - component: {fileID: 9095375099104686451}
   - component: {fileID: 9095375099104686450}
-  - component: {fileID: 2144876865538340352}
+  - component: {fileID: 3564494839228107117}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -84,7 +84,7 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9095375099104686453}
   m_Enabled: 1
---- !u!114 &2144876865538340352
+--- !u!114 &3564494839228107117
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,3 +97,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _trackEventService: {fileID: 0}
+  _type: levelStart
+  _data: level:3

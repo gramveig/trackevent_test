@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _serverUrl: http://local.test.ru
+  _cooldownBeforeSend: 3
