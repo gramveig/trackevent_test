@@ -564,7 +564,15 @@ PlayerSettings:
   webGLLinkerTarget: 1
   webGLThreadsSupport: 0
   webGLDecompressionFallback: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: 
+    4: 
+    7: JSONSerializationFileSave
+    13: JSONSerializationPlayerPrefs
+    14: 
+    19: 
+    21: 
+    25: 
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}
