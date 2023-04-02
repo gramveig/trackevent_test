@@ -21,6 +21,7 @@ namespace Alex.trackevent_service
         private bool _isUploading;
         private bool _isBusy;
         private string _savePath;
+        private EventsData _eventsData;
 
         private void Start()
         {
@@ -47,6 +48,11 @@ namespace Alex.trackevent_service
 
         private void OnDestroy()
         {
+            if (_events.Count == 0 || _isUploading)
+            {
+                return;
+            }
+
             SaveEvents();
         }
 
@@ -64,15 +70,20 @@ namespace Alex.trackevent_service
 
         private void UploadEvents()
         {
-            EventsData eventsData = GetEventsData();
-            string jsonStr = JsonUtility.ToJson(eventsData);
+            _eventsData = GetEventsData();
+            SaveEventsBeforeUpload(_eventsData);
+        }
+
+        private void UploadAfterEventsSaved()
+        {
+            string jsonStr = JsonUtility.ToJson(_eventsData);
 
             _isUploading = true;
             _cooldownTimeCounter = 0;
             Debug.Log("Attempting to upload " + _events.Count + " event(s) to the server...");
             StartCoroutine(Upload(jsonStr));
         }
-
+        
         private EventsData GetEventsData()
         {
             var eventsData = new EventsData
@@ -98,6 +109,7 @@ namespace Alex.trackevent_service
             else
             {
                 Debug.Log(_events.Count + " event(s) uploaded successfully.");
+                SaveManager.Instance.ClearFIle(_savePath);
                 _events.Clear();
             }
 
@@ -117,9 +129,16 @@ namespace Alex.trackevent_service
                 return;
             }
 
+            Debug.Log("Saving " + _events.Count + " unsent event(s) before exiting application...");
             _isBusy = true;
             var eventsData = GetEventsData();
             SaveManager.Instance.Save(eventsData, _savePath, OnEventsSaved, true);
+        }
+        
+        private void SaveEventsBeforeUpload(EventsData eventsData)
+        {
+            Debug.Log("Saving " + eventsData.events.Length + " event(s) before uploading them to server...");
+            SaveManager.Instance.Save(eventsData, _savePath, OnEventsSavedBeforeUpload, true);
         }
 
         private void OnEventsLoaded(EventsData eventsData, SaveResult result, string message)
@@ -148,20 +167,26 @@ namespace Alex.trackevent_service
             _isBusy = false;
             if (result == SaveResult.Error)
             {
-                //trying to remove event and save again in case event string is too long
-                if (_events.Count > 0)
-                {
-                    _events.RemoveAt(0);
-                    SaveEvents();
-                    return;
-                }
-
                 Debug.LogError($"Error saving events.\nresult: {result}, message: {message}");
                 return;
             }
 
-            Debug.Log(_events.Count + " event(s) saved successfully for later retrieval.");
+            Debug.Log("Events saved successfully.");
             _events.Clear();
+        }
+        
+        private void OnEventsSavedBeforeUpload(SaveResult result, string message)
+        {
+            if (result == SaveResult.Error)
+            {
+                Debug.LogError($"Error saving events.\nresult: {result}, message: {message}");
+            }
+            else
+            {
+                Debug.Log("Events saved successfully.");
+            }
+
+            UploadAfterEventsSaved();
         }
     }
 }
