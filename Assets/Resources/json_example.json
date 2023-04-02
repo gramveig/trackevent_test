@@ -1,0 +1,8 @@
+{
+    "events": [
+        {
+            "type": "levelStart",
+            "data": "level:3"
+        }
+    ]
+}

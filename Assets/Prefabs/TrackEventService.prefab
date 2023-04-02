@@ -43,3 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 973efe410812432f8cc9a68734d8d0a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _serverUrl: http://local.test.ru
